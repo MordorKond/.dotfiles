@@ -1,0 +1,160 @@
+- hosts: localhost
+  connection: local
+  gather_facts: yes
+  become: true
+
+  tasks:
+- hosts: localhost
+  connection: local
+  gather_facts: yes
+  become: false
+
+  tasks:
+    - name: Find out cwd
+      shell: pwd
+      register: cwd
+    - debug: 
+      debug: var=cwd.stdout
+
+    - name: Get current user
+      command: whoami
+      register: whoami_output
+
+    - name: Set ansible_user to the result of whoami
+      set_fact:
+        ansible_user: "{{ whoami_output.stdout }}"
+    - name: Check if Homebrew is installed
+      command: /bin/bash -c "command -v brew"
+      register: homebrew_installed
+      changed_when: false
+      ignore_errors: true
+
+    - name: Install Homebrew if not installed
+      command: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      when: homebrew_installed.rc != 0
+      become: false
+      changed_when: true
+
+    - name: Update Homebrew if installed
+      command: brew update
+      when: homebrew_installed.rc == 0
+      become: false
+      changed_when: true
+
+    - name: Update package manager cache
+      package:
+        name: null
+        update_cache: yes
+      when: ansible_facts['os_family'] == 'Debian'
+      tags:
+        - update
+
+    - name: Update Homebrew
+      command: brew update
+      when: ansible_facts['os_family'] == 'Darwin'
+      tags:
+        - update
+
+    - name: Install zsh
+      package:
+        name: zsh
+        state: present
+      tags:
+        - zsh
+
+    - name: Change shell to zsh
+      become: true
+      shell: chsh -s /opt/homebrew/bin/zsh "{{ansible_user}}"
+      args:
+        executable: /bin/bash
+      tags:
+         zsh
+    - name: Check if Oh My Zsh is installed
+      stat:
+        path: ~/.oh-my-zsh
+      register: oh_my_zsh
+
+    - name: Check if Oh My Zsh is installed debug
+      debug: 
+        msg: Does oh my zsh exist {{oh_my_zsh.stat.exists}}
+
+    - name: Install oh-my-zsh
+      shell: curl -L https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | sh
+      when: not oh_my_zsh.stat.exists
+      tags: 
+        - zsh
+
+    - name: Install zsh-autosuggestions
+      ansible.builtin.git:
+        repo: 'https://github.com/zsh-users/zsh-autosuggestions.git'
+        dest: "{{ ansible_user_dir }}/.oh-my-zsh/plugins/zsh-autosuggestions"
+      tags:
+        - zsh
+
+    - name: Install nodejs and npm
+      package:
+        name: ['nodejs', 'npm']
+        state: present
+      when: ansible_facts['os_family'] == 'Debian'
+      tags:
+        - node
+
+    - name: Install nodejs and npm
+      command: brew install node
+      when: ansible_facts['os_family'] == 'Darwin'
+      tags:
+        - node
+
+    - name: Install n
+      command: npm install -g n
+      tags:
+        - node
+
+    - name: Install node version 20
+      become: true
+      shell: n 20
+      tags:
+        - node
+
+    - name: Install tmux
+      package:
+        name: tmux
+        state: present
+      tags:
+        - tmux
+
+    - name: Install nvim
+      package:
+        name: nvim
+        state: present
+      tags:
+        - nvim
+
+    - name: Install stow
+      package:
+        name: stow
+        state: present
+      tags:
+        - stow
+
+    - name: Install fzf
+      package:
+        name: fzf
+        state: present
+      tags:
+        - fzf
+
+    - name: Install ripgrep
+      package:
+        name: ripgrep 
+        state: present
+      tags:
+        - ripgrep 
+
+    - name: Install cask kitty
+      community.general.homebrew_cask:
+        name: kitty
+        state: present
+      tags:
+        - kitty
+
