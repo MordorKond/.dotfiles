@@ -137,6 +137,22 @@
       tags:
         - stow
 
+    - name: Install blueutil 
+      package:
+        name: blueutil 
+        state: present
+      tags:
+        - blueutil 
+        - audio 
+
+    - name: Install switchaudio-osx 
+      package:
+        name: switchaudio-osx 
+        state: present
+      tags:
+        - switchaudio-osx 
+        - audio
+
     - name: Install fzf
       package:
         name: fzf
