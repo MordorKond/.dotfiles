@@ -106,7 +106,8 @@ source $ZSH/oh-my-zsh.sh
    export FZF_DEFAULT_COMMAND='find . -type d \( -path "*/node_modules" -o -path "*/.git" \) -prune -o -type f -print'
    # export FZF_DEFAULT_COMMAND="ag --ignore '.git' --ignore 'node_modules/' -g ."
    # export FZF_ALT_C_COMMAND="ag --ignore '.git' --ignore 'node_modules/' -g ."
-   export FZF_ALT_C_COMMAND='find /Applications/XAMPP/xamppfiles/htdocs/test ~/Downloads/ ~/Repos/ ~/Repos/Projects/ ~/Books/ -maxdepth 4 -type d -not -path "*/node_modules/*" -not -path "*/.git/*" -not -path "*/cache/*"'
+   # export FZF_ALT_C_COMMAND='find /Applications/XAMPP/xamppfiles/htdocs/test ~/Downloads/ ~/Repos/ ~/Repos/Projects/ ~/Books/ -maxdepth 4 -type d -not -path "*/node_modules/*" -not -path "*/.git/*" -not -path "*/cache/*"'
+   export FZF_ALT_C_COMMAND='find . -maxdepth 4 -type d -not -path "*/node_modules/*" -not -path "*/.git/*" -not -path "*/cache/*"'
    # export FZF_ALT_C_COMMAND='find /Applications/XAMPP/xamppfiles/htdocs/test ~/Downloads/ ~/Repos/ -maxdepth 4 -type d -not -path "*/node_modules/*" -not -path "*/.git/*" -not -path "*/cache/*"'
    # export FZF_ALT_C_COMMAND='ag --ignore library --ignore node_modules --ignore .git -g ""'
    # export FZF_ALT_C_COMMAND='ag --ignore library --ignore node_modules --ignore .git -g "*/"'
