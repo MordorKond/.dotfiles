@@ -1,0 +1,12 @@
+- hosts: localhost
+  connection: local
+  gather_facts: yes
+  become: false
+
+  vars:
+    source_key: "~/.dotfiles/.ssh/id_rsa"
+    dest_key: "{{lookup('env','HOME')}}/.ssh/test/id_rsa"
+
+  tasks:
+    - include: tasks/ssh.yml
+    - include: tasks/git-setup.yml
