@@ -1,21 +1,9 @@
 - hosts: localhost
   connection: local
   gather_facts: yes
-  become: true
-
-  tasks:
-- hosts: localhost
-  connection: local
-  gather_facts: yes
   become: false
 
   tasks:
-    - name: Find out cwd
-      shell: pwd
-      register: cwd
-    - debug: 
-      debug: var=cwd.stdout
-
     - name: Get current user
       command: whoami
       register: whoami_output
@@ -23,31 +11,12 @@
     - name: Set ansible_user to the result of whoami
       set_fact:
         ansible_user: "{{ whoami_output.stdout }}"
-    - name: Check if Homebrew is installed
-      command: /bin/bash -c "command -v brew"
-      register: homebrew_installed
-      changed_when: false
-      ignore_errors: true
-
-    - name: Install Homebrew if not installed
-      command: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-      when: homebrew_installed.rc != 0
-      become: false
-      changed_when: true
 
     - name: Update Homebrew if installed
       command: brew update
       when: homebrew_installed.rc == 0
       become: false
       changed_when: true
-
-    - name: Update package manager cache
-      package:
-        name: null
-        update_cache: yes
-      when: ansible_facts['os_family'] == 'Debian'
-      tags:
-        - update
 
     - name: Update Homebrew
       command: brew update
@@ -174,3 +143,34 @@
       tags:
         - kitty
 
+    - name: Install cask microsoft-edge
+      community.general.homebrew_cask:
+        name: microsoft-edge 
+        state: present
+      tags:
+        - microsoft-edge 
+        - browsers
+
+    - name: Install cask firefox
+      community.general.homebrew_cask:
+        name: firefox
+        state: present
+      tags:
+        - firefox
+        - browsers
+
+    - name: Install cask amethyst
+      community.general.homebrew_cask:
+        name: amethyst 
+        state: present
+      tags:
+        - amethyst 
+        - wm
+
+    - name: Install cask shortcat
+      community.general.homebrew_cask:
+        name: shortcat 
+        state: present
+      tags:
+        - shortcat 
+        - wm
