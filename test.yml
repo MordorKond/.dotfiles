@@ -12,12 +12,6 @@
       set_fact:
         ansible_user: "{{ whoami_output.stdout }}"
 
-    - name: Update Homebrew if installed
-      command: brew update
-      when: homebrew_installed.rc == 0
-      become: false
-      changed_when: true
-
     - name: Update Homebrew
       command: brew update
       when: ansible_facts['os_family'] == 'Darwin'
