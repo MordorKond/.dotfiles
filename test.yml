@@ -63,8 +63,9 @@
         - node
 
     - name: Install nodejs and npm
-      command: brew install node
-      when: ansible_facts['os_family'] == 'Darwin'
+      package: 
+        name: node 
+        state: present
       tags:
         - node
 
