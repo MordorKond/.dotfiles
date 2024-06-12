@@ -115,6 +115,10 @@ source $ZSH/oh-my-zsh.sh
    # export FZF_ALT_C_COMMAND='find . -type d \( -path "*/node_modules" -o -path "*/.git" \) -prune -o -type f -print'
    # export FZF_ALT_C_COMMAND='rg --files --no-ignore --hidden --follow --glob "!.git/*" --glob "!node_modules/*" --glob "!vendor/*" 2> /dev/null'
    # export FZF_ALT_C_COMMAND='rg --files --hidden --glob "!.git" --glob "!node_modules" --glob'
+bindkey "ç" fzf-cd-widget #alt_c results in ç so this is a quick fix
+# Set up fzf key bindings and fuzzy completion
+source <(fzf --zsh)
+
 
 alias cvlc='/Applications/VLC.app/Contents/MacOS/VLC'
 alias vlc='open -a /Applications/VLC.app'
@@ -124,3 +128,4 @@ alias vlc='open -a /Applications/VLC.app'
 export PATH="/usr/local/opt/postgresql@15/bin:$PATH"
 export PATH="/usr/local/opt/node@20/bin:$PATH"
 export PATH="/usr/local/opt/node@20/bin:$PATH"
+export PATH="/opt/homebrew/bin:$PATH"
