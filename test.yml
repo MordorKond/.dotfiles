@@ -93,6 +93,15 @@
       tags:
         - nvim
 
+    - name: Install prettier 
+      package:
+        name: prettier 
+        state: present
+      tags:
+        - prettier 
+        - formatter 
+        - nvim 
+
     - name: Install stow
       package:
         name: stow
