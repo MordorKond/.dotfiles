@@ -7,6 +7,8 @@
     - name: Get current user
       command: whoami
       register: whoami_output
+      tags:
+        - minimal
 
     - name: Set ansible_user to the result of whoami
       set_fact:
@@ -16,6 +18,7 @@
       command: brew update
       when: ansible_facts['os_family'] == 'Darwin'
       tags:
+        - minimal
         - update
 
     - name: Install zsh
@@ -23,19 +26,24 @@
         name: zsh
         state: present
       tags:
+        - minimal
         - zsh
 
-    - name: Change shell to zsh
-      become: true
-      shell: chsh -s /opt/homebrew/bin/zsh "{{ansible_user}}"
-      args:
-        executable: /bin/bash
-      tags:
-         zsh
+    # - name: Change shell to zsh
+    #   become: true
+    #   shell: chsh -s /opt/homebrew/bin/zsh "{{ansible_user}}"
+    #   args:
+    #     executable: /bin/bash
+    #   tags:
+    #     - minimal
+    #     - zsh
+
     - name: Check if Oh My Zsh is installed
       stat:
         path: ~/.oh-my-zsh
       register: oh_my_zsh
+      tags:
+        - minimal
 
     - name: Check if Oh My Zsh is installed debug
       debug: 
@@ -46,6 +54,7 @@
       when: not oh_my_zsh.stat.exists
       tags: 
         - zsh
+        - minimal
 
     - name: Install zsh-autosuggestions
       ansible.builtin.git:
@@ -53,6 +62,7 @@
         dest: "{{ ansible_user_dir }}/.oh-my-zsh/plugins/zsh-autosuggestions"
       tags:
         - zsh
+        - minimal
 
     - name: Install nodejs and npm
       package:
@@ -61,6 +71,7 @@
       when: ansible_facts['os_family'] == 'Debian'
       tags:
         - node
+        - minimal
 
     - name: Install nodejs and npm
       package: 
@@ -68,17 +79,20 @@
         state: present
       tags:
         - node
+        - minimal
 
     - name: Install n
       command: npm install -g n
       tags:
         - node
+        - minimal
 
     - name: Install node version 20
       become: true
       shell: n 20
       tags:
         - node
+        - minimal
 
     - name: Install tmux
       package:
@@ -86,6 +100,7 @@
         state: present
       tags:
         - tmux
+        - minimal
 
     - name: Install nvim
       package:
@@ -93,6 +108,7 @@
         state: present
       tags:
         - nvim
+        - minimal
 
     - name: Install prettier 
       package:
@@ -109,6 +125,7 @@
         state: present
       tags:
         - stow
+        - minimal
 
     - name: Install blueutil 
       package:
@@ -132,6 +149,7 @@
         state: present
       tags:
         - fzf
+        - minimal
 
     - name: Install ripgrep
       package:
@@ -139,6 +157,7 @@
         state: present
       tags:
         - ripgrep 
+        - minimal
 
     - name: Install cask kitty
       community.general.homebrew_cask:
@@ -178,3 +197,25 @@
       tags:
         - shortcat 
         - wm
+
+    - name: Install brave-browser
+      community.general.homebrew_cask:
+        name: brave-browser 
+        state: present
+      tags:
+        - brave-browser 
+
+    - name: Install cask deepl
+      community.general.homebrew_cask:
+        name: deepl 
+        state: present
+      tags:
+        - deepl 
+
+    - name: Install cask bartender
+      community.general.homebrew_cask:
+        name: bartender 
+        state: present
+      tags:
+        - bartender 
+
